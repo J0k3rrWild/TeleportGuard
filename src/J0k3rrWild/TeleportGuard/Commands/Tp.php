@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace J0k3rrWild\TeleportGuard;
+namespace J0k3rrWild\TeleportGuard\Commands;
 
 
 use pocketmine\utils\TextFormat as TF;
@@ -39,6 +39,47 @@ public $main;
         if($sender->hasPermission("teleportguard.tp")){
           $ptarget = $this->main->getServer()->getPlayer($args[0]);
           
+          if(isset($args[2])){
+            if(isset($args[3])){
+                if($ptarget){
+                 $getx = round(intval($args[1]));
+                 $gety = round(intval($args[2]));
+                 $getz = round(intval($args[3]));
+                }else{
+                   $sender->sendMessage(TF::RED."[MeetMate] > Nie wykryto gracza {$args[0]}");
+                   return true;
+                }
+            }else{
+               $getx = round(intval($args[0]));
+               $gety = round(intval($args[1]));
+               $getz = round(intval($args[2]));
+            }
+            if(isset($ptarget) && ($ptarget === $sender)){
+                $level = $sender->getLevel();
+            }else{
+                if(!isset($args[3])){
+                    $level = $sender->getLevel();
+                    $tp = new Position($getx, $gety, $getz, $level);
+                    $sender->teleport($tp);
+                }else{
+                    $level = $ptarget->getLevel();
+                    $tp = new Position($getx, $gety, $getz, $level);
+                    $ptarget->teleport($tp);
+                }
+            }
+
+
+            if($ptarget){
+               $ptarget->sendMessage(TF::GREEN."[MeetMate] > Teleportowano na koordynaty X:{$getx} Y:{$gety} Z:{$getz}");
+               $sender->sendMessage(TF::GREEN."[MeetMate] > Teleportowano gracza {$ptarget->getName()} na koordynaty X:{$getx} Y:{$gety} Z:{$getz}");
+               return true;
+            }else{
+               $sender->sendMessage(TF::GREEN."[MeetMate] > Teleportowano na koordynaty X:{$getx} Y:{$gety} Z:{$getz}");
+               return true;
+            }
+
+               }
+
           if($ptarget){
            if(!isset($args[1])){
                if(!($sender instanceof Player)) return false;
@@ -53,6 +94,7 @@ public $main;
                     return true;
 
                 }
+           
              }else{
                 $sender->sendMessage(TF::RED."[MeetMate] > Nie wykryto gracza {$args[0]}");
                 return true;
@@ -73,6 +115,7 @@ public $main;
                 return true;
             }else{
                 $sender->sendMessage(TF::RED."[MeetMate] > Nie wykryto gracza {$args[1]}");
+                return true;
             }
 
            
