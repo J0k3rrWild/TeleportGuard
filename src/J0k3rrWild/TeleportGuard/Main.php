@@ -9,7 +9,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
-use J0k3rrWild\TeleportGuard\Tp;
+use J0k3rrWild\TeleportGuard\Commands\Tp;
 
 
 class Main extends PluginBase implements Listener{
@@ -28,11 +28,11 @@ public $unregister = array("tp");
             $command->setLabel($disable."_disabled");
             $command->unregister($commandMap);
             }
-            $commandMap->register("Tp", new Tp($this));
+            $commandMap->register("Tp", new Commands\Tp($this));
 
 
             //Register
-            $this->getCommand("tp")->setExecutor(new Tp($this));
+            $this->getCommand("tp")->setExecutor(new Commands\Tp($this));
 
 
         $this->getLogger()->info(TF::GREEN."[TeleportGuard] > Plugin oraz konfiguracja została załadowana pomyślnie");
