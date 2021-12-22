@@ -29,7 +29,7 @@ public $main;
     public function __construct(Main $main) {
         parent::__construct("tpa", $main);
         $this->setDescription("Wysyła zapytanie o teleport do gracza");
-        $this->setUsage("/tpa <player> | /tpa accept <player>| /tpa deny <player>");
+        $this->setUsage("/tpa <player> | /tpa accept <player>| /tpa deny <player> | /tpa here <player>");
         $this->main = $main;
         
     }
@@ -79,7 +79,7 @@ public $main;
             
         }else{
             $sender->sendMessage(TF::RED."[MeetMate] > Niepoprawny nick lub gracz {$args[0]} jest offine");
-            return true;
+            return false;
         }
      }
 
@@ -102,7 +102,55 @@ public $main;
                     return true;
                 }
             }
+            if(in_array($target->getName()."_here", $deco)){
+
+                
+                $new = array_diff($deco, array($target->getName()."_here")); 
+                file_put_contents($jcfg, json_encode($new)); 
+
+                $sender->sendMessage(TF::GREEN."[MeetMate] > Odrzucono zapytanie od {$target->getName()}");
+                if($target){
+                    $target->sendMessage(TF::RED."[MeetMate] > {$sender->getName()} odrzucił twoje zapytanie o teleport");
+                    return true;
+                }else{
+                    return true;
+                }
+            }
            
+
+        }
+
+        if((strtolower($args[0]) === "here") && isset($args[1])){
+            $target = $this->main->getServer()->getPlayer($args[1]);
+            if($target){
+
+
+                if($cfg->get("TpaCooldown") === true){
+                    $sender->sendMessage(TF::RED."[MeetMate] > Musisz odczekać 15 sekund przed następnym zapytaniem!");
+                    return true;
+                }
+    
+                    $cfg->set("TpaCooldown", true);
+                    $cfg->save();
+                    
+                    $jcfg = $this->main->getDataFolder()."players/". strtolower($target->getName()) . "/temp.json";
+                    
+                    $json = file_get_contents($jcfg);
+                    $deco = json_decode($json, true);
+                    array_push($deco, $sender->getName()."_here"); 
+                    file_put_contents($jcfg, json_encode($deco)); 
+    
+                    $sender->sendMessage(TF::GREEN."[MeetMate] > Wysłano zapytanie o teleport do ciebie dla {$target->getName()}");
+                    $target->sendMessage(TF::GREEN."[MeetMate] > {$sender->getName()} chce byś ty DO NIEGO się teleportował, wpisz w ciągu 15 sekund komende tpa accept/deny {$sender->getName()} (lub pierwsze znaki nicku) by odpowiedzieć");
+                    $task = new Tasks\TpaDelayed($this, $cfg, $target, $sender, $args[0]); 
+                    $this->main->getScheduler()->scheduleDelayedTask($task,15*20); // Counted in ticks (1 second = 20 ticks)
+                    return true;
+                    
+                
+            }else{
+                $sender->sendMessage(TF::RED."[MeetMate] > Niepoprawny nick lub gracz {$args[1]} jest offine");
+                return true;
+            }
 
         }
  
@@ -112,7 +160,8 @@ public $main;
               if($target){
                 $json = file_get_contents($jcfg);
                 $deco = json_decode($json, true);
-                if(in_array($target->getName(), $deco)){
+                if((in_array($target->getName(), $deco)) || (in_array($target->getName()."_here", $deco))){
+                 if(!(in_array($target->getName()."_here", $deco))){
                     $getx = round($sender->getX());
                     $gety = round($sender->getY());
                     $getz = round($sender->getZ());
@@ -122,12 +171,24 @@ public $main;
                     $sender->sendMessage(TF::GREEN."[MeetMate] > Teleportowano do ciebie {$target->getName()}");
                     $target->sendMessage(TF::GREEN."[MeetMate] > Teleportowano do {$sender->getName()}");
                     return true;
+                 }else{
+                    $getx = round($target->getX());
+                    $gety = round($target->getY());
+                    $getz = round($target->getZ());
+                    $level = $target->getLevel();
+                    $tp = new Position($getx, $gety, $getz, $level);
+                    $sender->teleport($tp);
+                    $target->sendMessage(TF::GREEN."[MeetMate] > Teleportowano do ciebie {$target->getName()}");
+                    $sender->sendMessage(TF::GREEN."[MeetMate] > Teleportowano do {$sender->getName()}");
+                    return true;
+
+                 }
                 }else{
                   $sender->sendMessage(TF::RED."[MeetMate] > Odpowiedziałeś na zapytanie gracza {$target->getName()} zbyt późno bądź wpisałeś niepoprawny nick.");
                   return true;
                 }
               }else{
-                  $sender->sendMessage(TF::RED."[MeetMate] > Gracz {$target->getName()} nie jest już online bądź wpisałeś niepoprawny nick.");
+                  $sender->sendMessage(TF::RED."[MeetMate] > Gracz {$args[1]} nie jest już online bądź wpisałeś niepoprawny nick.");
                   return true;
               }
         }else{

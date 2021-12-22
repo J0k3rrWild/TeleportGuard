@@ -14,10 +14,11 @@ class TpaDelayed extends Task{
 
 
 
-    public function __construct(Tpa $plugin, $cfg, $target, $sender){ 
+    public function __construct(Tpa $plugin, $cfg, $target, $sender, $arg = NULL){ 
        $this->plugin = $plugin; 
        $this->target = $target;
        $this->sender = $sender;
+       $this->arg = $arg;
   
        
     } 
@@ -28,14 +29,25 @@ class TpaDelayed extends Task{
       $cfg = new Config($this->plugin->main->getDataFolder()."players/". strtolower($this->sender->getName()) . "/temp.yml", Config::YAML);
       $cfg->set("TpaCooldown", false);
       $cfg->save();
-        
-         $jcfg = $this->plugin->main->getDataFolder()."players/". strtolower($this->target->getName()) . "/temp.json";
+      
+      $jcfg = $this->plugin->main->getDataFolder()."players/". strtolower($this->target->getName()) . "/temp.json";
                 
-         $json = file_get_contents($jcfg);
-         $deco = json_decode($json, true);
+      $json = file_get_contents($jcfg);
+      $deco = json_decode($json, true);
+
+
+
+      if(strtolower($this->arg) === "here"){
+        
+         $new = array_diff($deco, array($this->sender->getName()."_here")); 
+         file_put_contents($jcfg, json_encode($new)); 
+         return true;
+      
+      }else{
+          
          $new = array_diff($deco, array($this->sender->getName())); 
          file_put_contents($jcfg, json_encode($new)); 
-      
+      }
      
       
      }
