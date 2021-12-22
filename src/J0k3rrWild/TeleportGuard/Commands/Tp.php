@@ -25,7 +25,7 @@ public $main;
 
   
     public function __construct(Main $main) {
-        parent::__construct("tp", $main);
+        parent::__construct("tp", $main, ["teleport"]);
         $this->setDescription("Teleportuje do celu");
         $this->setUsage("/tp <player> | /tp <player> <target>| /tp <x> <y> <z> | /tp <player> <x> <y> <z>");
         $this->main = $main;
