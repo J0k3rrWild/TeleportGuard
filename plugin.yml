@@ -1,20 +1,24 @@
 ---
 name: TeleportGuard
-version: 0.0.1
+version: 1.0.0
 main: J0k3rrWild\TeleportGuard\Main
 website: https://github.com/J0k3rrWild
 api: 3.26.3
 
 commands:
-tp:
-  permission: teleportguard.command.tp
-  description: Teleportuje natychmiast do celu
-  usage: /tp <player> | /tp <player> <target>| /tp <x> <y> <z> | /tp <player> <x> <y> <z>
-  aliases: [tp, teleport]
-tpa:
-  permission: teleportguard.command.tp
-  description: Wysyła zapytanie o teleport do gracza
-  usage: /tpa <player> | /tpa accept | /tpa deny
+  tp:
+    permission: teleportguard.command.tp
+    description: Teleportuje natychmiast do celu
+    usage: /tp <player> | /tp <player> <target>| /tp <x> <y> <z> | /tp <player> <x> <y> <z>
+    aliases: [teleport]
+  teleport:
+    permission: teleportguard.command.tp
+    description: Teleportuje natychmiast do celu
+    usage: /teleport <player> | /teleport <player> <target>| /teleport <x> <y> <z> | /teleport <player> <x> <y> <z>
+  tpa:
+    permission: teleportguard.command.tp
+    description: Wysyła zapytanie o teleport do gracza
+    usage: /tpa <player> | /tpa accept | /tpa deny
 permissions:
  teleportguard.tp:
   default: op
