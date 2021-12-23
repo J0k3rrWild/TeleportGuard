@@ -48,7 +48,10 @@ public $main;
 
         $cfg = new Config($this->main->getDataFolder()."players/". strtolower($sender->getName()) . "/temp.yml", Config::YAML);
         
-       
+       if($sender === $target){
+           $sender->sendMessage(TF::RED."[MeetMate] > Nie możesz wysłać zapytania do samego siebie!");
+           return true;
+       }
 
        
      if(!isset($args[1])){   
