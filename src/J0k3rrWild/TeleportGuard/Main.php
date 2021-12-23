@@ -21,6 +21,7 @@ public $unregister = array("tp", "teleport");
         $this->getServer()->getPluginManager()->registerEvents($this,$this);
         @mkdir($this->getDataFolder());
         @mkdir($this->getDataFolder()."players/");
+        $this->saveResource( "warps.json");
 
         //Unregister
         foreach($this->unregister as $disable){
@@ -37,6 +38,7 @@ public $unregister = array("tp", "teleport");
             $this->getCommand("tp")->setExecutor(new Commands\Tp($this));
             $this->getCommand("teleport")->setExecutor(new Commands\Tp($this));
             $this->getCommand("tpa")->setExecutor(new Commands\Tpa($this));
+            $this->getCommand("warp")->setExecutor(new Commands\Warp($this));
        
            
 
