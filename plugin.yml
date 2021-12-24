@@ -1,6 +1,6 @@
 ---
 name: TeleportGuard
-version: 1.0.9
+version: 1.1.2
 main: J0k3rrWild\TeleportGuard\Main
 website: https://github.com/J0k3rrWild
 api: 3.26.3
@@ -23,6 +23,10 @@ commands:
     permission: teleportguard.command.warp
     description: Komenda główna warp
     usage: /warp <name> | /warp set <name> | /warp remove <name> | /warp list
+  home:
+    permission: teleportguard.command.home
+    description: Komenda główna home
+    usage: /home <name> | /home remove <name>| /home set <name> | /home list <name>
 permissions:
  teleportguard.tp:
   default: op
