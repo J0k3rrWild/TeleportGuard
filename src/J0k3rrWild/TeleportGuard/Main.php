@@ -11,6 +11,7 @@ use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat as TF;
 use J0k3rrWild\TeleportGuard\Commands\Tp;
 use J0k3rrWild\TeleportGuard\Commands\Tpa;
+use J0k3rrWild\TeleportGuard\Commands\Home;
 
 
 class Main extends PluginBase implements Listener{
@@ -39,6 +40,7 @@ public $unregister = array("tp", "teleport");
             $this->getCommand("teleport")->setExecutor(new Commands\Tp($this));
             $this->getCommand("tpa")->setExecutor(new Commands\Tpa($this));
             $this->getCommand("warp")->setExecutor(new Commands\Warp($this));
+            $this->getCommand("home")->setExecutor(new Commands\Home($this));
        
            
 
@@ -57,8 +59,11 @@ public $unregister = array("tp", "teleport");
 
             $playerData = fopen($this->getDataFolder()."players/". strtolower($e->getPlayer()->getName()). "/temp.json", "w");
             $data = "[]";
+         
+            
             fwrite($playerData, $data);
             fclose($playerData);
+            
         }else{
          @mkdir($this->getDataFolder()."players/". strtolower($e->getPlayer()->getName()));
          $cfg = new Config($this->getDataFolder()."players/". strtolower($e->getPlayer()->getName()) . "/temp.yml", Config::YAML);
@@ -67,9 +72,14 @@ public $unregister = array("tp", "teleport");
          $cfg->save();
 
          $playerData = fopen($this->getDataFolder()."players/". strtolower($e->getPlayer()->getName()). "/temp.json", "w");
+         $playerData2 = fopen($this->getDataFolder()."players/". strtolower($e->getPlayer()->getName()). "/homes.json", "w");
          $data = "[]";
+         
+         fwrite($playerData2, $data);
+         fclose($playerData2);
          fwrite($playerData, $data);
          fclose($playerData);
+         
 
          
         }
