@@ -1,6 +1,6 @@
-# TeleportGuard - for PMMP API 4.0.3
+# TeleportGuard - for PMMP API 3.26.2
 
-You need this plugin for API 3.26.2 instead? [CLICK HERE](https://github.com/J0k3rrWild/TeleportGuard/tree/master)
+You need this plugin for API 4.0.3 instead? [CLICK HERE](https://github.com/J0k3rrWild/TeleportGuard/tree/api4)
 
 [![](https://poggit.pmmp.io/shield.state/TeleportGuard)](https://poggit.pmmp.io/p/TeleportGuard)
 
