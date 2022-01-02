@@ -46,7 +46,7 @@ public $unregister = array("tp", "teleport");
            
 
 
-        $this->getLogger()->info(TF::GREEN."[TeleportGuard] > Plugin oraz konfiguracja została załadowana pomyślnie");
+      
 
     }
 
