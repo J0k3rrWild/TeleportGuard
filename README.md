@@ -59,3 +59,7 @@ Advanced and safe teleport administrator which will help you make the server saf
 ```teleportguard.warp.set``` - Allow to set warps<br>
 ```teleportguard.warp.list``` - Allow to list warps<br>
 ```teleportguard.admin``` - Gives all plugin permissions<br>
+
+## Social media
+
+[![](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/8b3rKZPYM8)
