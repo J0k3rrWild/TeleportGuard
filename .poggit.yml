@@ -1,0 +1,9 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/J0k3rrWild/TeleportGuard
+build-by-default: true
+branches:
+- api4
+projects:
+  TeleportGuard:
+    path: ""
+    icon: "icon.png"
+...
