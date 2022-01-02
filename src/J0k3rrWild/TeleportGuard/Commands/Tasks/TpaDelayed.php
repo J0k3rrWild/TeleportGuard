@@ -24,7 +24,7 @@ class TpaDelayed extends Task{
     } 
 
 
-    public function onRun(int $tick){ 
+    public function onRun() : void{ 
 
       $cfg = new Config($this->plugin->main->getDataFolder()."players/". strtolower($this->sender->getName()) . "/temp.yml", Config::YAML);
       $cfg->set("TpaCooldown", false);
@@ -41,7 +41,7 @@ class TpaDelayed extends Task{
         
          $new = array_diff($deco, array($this->sender->getName()."_here")); 
          file_put_contents($jcfg, json_encode($new)); 
-         return true;
+      
       
       }else{
           

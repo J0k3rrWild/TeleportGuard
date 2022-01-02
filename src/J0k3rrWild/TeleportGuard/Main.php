@@ -18,8 +18,10 @@ class Main extends PluginBase implements Listener{
 
 public $unregister = array("tp", "teleport"); 
 
-    public function onEnable(){
+    public function onEnable(): void{
         $this->getServer()->getPluginManager()->registerEvents($this,$this);
+        $server = $this->getServer();
+
         @mkdir($this->getDataFolder());
         @mkdir($this->getDataFolder()."players/");
         $this->saveResource( "warps.json");
@@ -32,15 +34,14 @@ public $unregister = array("tp", "teleport");
             $command->unregister($commandMap);
             }
             
-            $commandMap->register("tp", new Commands\Tp($this));
+            // $commandMap->register("tp", new Commands\Tp($this));
 
 
             //Register
-            $this->getCommand("tp")->setExecutor(new Commands\Tp($this));
-            $this->getCommand("teleport")->setExecutor(new Commands\Tp($this));
-            $this->getCommand("tpa")->setExecutor(new Commands\Tpa($this));
-            $this->getCommand("warp")->setExecutor(new Commands\Warp($this));
-            $this->getCommand("home")->setExecutor(new Commands\Home($this));
+            $server->getCommandMap()->register("tp", new Commands\Tp($this));
+            $server->getCommandMap()->register("tpa", new Commands\Tpa($this));
+            $server->getCommandMap()->register("warp", new Commands\Warp($this));
+            $server->getCommandMap()->register("home", new Commands\Home($this));
        
            
 

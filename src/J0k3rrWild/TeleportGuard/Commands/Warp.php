@@ -10,8 +10,12 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\level\Position;
+use pocketmine\plugin\{PluginOwned, PluginOwnedTrait};
+use pocketmine\command\utils\InvalidCommandSyntaxException;
+use pocketmine\Server;
+use pocketmine\math\Vector3;
 
 
 
@@ -19,38 +23,47 @@ use pocketmine\level\Position;
 use J0k3rrWild\TeleportGuard\Main;
 
 
-class Warp extends PluginCommand implements CommandExecutor{
+class Warp extends Command implements PluginOwned{
+    use PluginOwnedTrait;
+
 
 public $main;
 public $warps;
   
     public function __construct(Main $main) {
+        parent::__construct("warp");
+        $this->setDescription("Warp main command");
+        $this->setUsage("/warp <name> | /warp set <name>| /warp del <name> | /warp list");
         $this->main = $main;
         
     }
     
 
-    public function onCommand(CommandSender $sender, Command $cmd, string $label, array $args) : bool {
-        if(!isset($args[0])) return false;
+    public function execute(CommandSender $sender, string $label, array $args) : bool {
+        if(!isset($args[0])){ 
+            throw new InvalidCommandSyntaxException;
+            return false;
+        }
    
         
           if((strtolower($args[0]) === "add" || strtolower($args[0]) === "set")){
            
-            if(!isset($args[1])){
+            if(!isset($args[1])){ 
+                throw new InvalidCommandSyntaxException;
                 return false;
             }
 
             if(($sender->hasPermission("teleportguard.warp.set")) || ($sender->hasPermission("teleportguard.admin"))){
 
                 if(!($sender instanceof Player)){
-                    $sender->sendMessage(TF::RED."[MeetMate] > Nie możesz użyć tej podkomendy w konsoli");
+                    $sender->sendMessage(TF::RED."[TeleportGuard] > You can't use that in console!");
                     return true;
                 }
 
-                $getx = round($sender->getX());
-                $gety = round($sender->getY());
-                $getz = round($sender->getZ());
-                $level = $sender->getLevel()->getName();
+                $getx = round($sender->getPosition()->getX());
+                $gety = round($sender->getPosition()->getY());
+                $getz = round($sender->getPosition()->getZ());
+                $level = $sender->getWorld()->getFolderName();
                 $name = strtolower($args[1]);
 
                 $cfg = $this->main->getDataFolder()."warps.json";
@@ -59,7 +72,7 @@ public $warps;
 
 
                 if(array_key_exists($name, $deco)){
-                $sender->sendMessage(TF::RED."[MeetMate] > Warp o nazwie {$name} już istnieje!");
+                $sender->sendMessage(TF::RED."[TeleportGuard] > Warp with name {$name} already exists!");
                 return true;
                 }
             
@@ -70,12 +83,12 @@ public $warps;
                 
                 $deco[$name] = $data;
                 file_put_contents($cfg, json_encode($deco)); 
-                $sender->sendMessage(TF::GREEN."[MeetMate] > Warp o nazwie {$name} został utworzony na X:{$getx} Y:{$gety} Z:{$getz} world: {$level}");
+                $sender->sendMessage(TF::GREEN."[TeleportGuard] > Warp with name {$name} has been created on X:{$getx} Y:{$gety} Z:{$getz} world: {$level}");
                 return true;
            
 
           }else{
-              $sender->sendMessage(TF::RED."[MeetMate] > Nie masz stosownych uprawnień by użyć tej komendy");
+              $sender->sendMessage(TF::RED."[TeleportGuard] > You don't have permission to use this command");
           }
 
         }
@@ -91,13 +104,13 @@ public $warps;
 
             }
             if(($this->warps === NULL) || (count($this->warps) === 0)){
-                $sender->sendMessage(TF::GREEN."[MeetMate] > Aktualnie nie ma żadnych ustawionych warpów");
+                $sender->sendMessage(TF::GREEN."[TeleportGuard] > There are currently no warps set");
                 return true;
             }
             
 
             $list = implode(", ", $this->warps);
-            $sender->sendMessage(TF::GREEN."Dostępne warpy: ".$list);
+            $sender->sendMessage(TF::GREEN."Warps: ".$list);
             
             foreach($deco as $name => $full){
                $this->warps = array_diff($this->warps, array($name));
@@ -105,7 +118,7 @@ public $warps;
             }
             return true;
            }else{
-               $sender->sendMessage(TF::RED."[MeetMate] > Nie masz stosownych uprawnień by wyświelić liste");
+               $sender->sendMessage(TF::RED."[TeleportGuard] > You don't have permission to use this command");
                return true;
            }
 
@@ -113,7 +126,8 @@ public $warps;
 
 
         if((strtolower($args[0]) === "del" || strtolower($args[0]) === "delete")){
-            if(!isset($args[1])){
+            if(!isset($args[1])){ 
+                throw new InvalidCommandSyntaxException;
                 return false;
             }
 
@@ -124,7 +138,7 @@ public $warps;
                 $name = strtolower($args[1]);  
 
                 if(!array_key_exists($name, $deco)){
-                    $sender->sendMessage(TF::RED."[MeetMate] > Warp o nazwie {$name} nie istnieje");
+                    $sender->sendMessage(TF::RED."[TeleportGuard] > Warp with name {$name} already exists");
                     return true;
                 }
                 
@@ -133,7 +147,7 @@ public $warps;
                      unset($deco[$name]);
                      
                      file_put_contents($cfg, json_encode($deco)); 
-                     $sender->sendMessage(TF::GREEN."[MeetMate] > Warp o nazwie {$name} został usunięty");
+                     $sender->sendMessage(TF::GREEN."[TeleportGuard] > Warp with name {$name} has been deleted");
                      
                     return true;
                  
@@ -144,7 +158,7 @@ public $warps;
         
         }else{
             if(!($sender instanceof Player)){
-                $sender->sendMessage(TF::RED."[MeetMate] > Nie możesz użyć tej podkomendy w konsoli");
+                $sender->sendMessage(TF::RED."[TeleportGuard] > You can't use that in console!");
                 return true;
             }
 
@@ -156,7 +170,7 @@ public $warps;
             
 
             if(!array_key_exists($name, $deco)){
-                $sender->sendMessage(TF::RED."[MeetMate] > Warp o nazwie {$name} nie istnieje");
+                $sender->sendMessage(TF::RED."[TeleportGuard] > Warp with name {$name} not exists");
                 return true;
             }
             if(($sender->hasPermission("teleportguard.warp.{$name}")) || ($sender->hasPermission("teleportguard.admin"))){
@@ -165,13 +179,13 @@ public $warps;
                 $y = $deco[$name]["Y"];
                 $z = $deco[$name]["Z"];
                 $world = $deco[$name]["World"];
-                
-                $tp = new Position($x, $y, $z, $this->main->getServer()->getLevelByName($world));
+                $level = Server::getInstance()->getWorldManager()->getWorldByName($world);
+                $tp = new Vector3($x, $y, $z, $level);
                 $sender->teleport($tp);
 
-                $sender->sendMessage(TF::GREEN."[MeetMate] > Teleportowano na warp {$name}");
+                $sender->sendMessage(TF::GREEN."[TeleportGuard] > Teleported to warp {$name}");
             }else{
-                $sender->sendMessage(TF::RED."[MeetMate] > Nie masz uprawnień by użyć tego warpa");
+                $sender->sendMessage(TF::RED."[TeleportGuard] > You don't have permission to use this warp");
             }
         }
 

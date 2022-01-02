@@ -3,43 +3,20 @@ name: TeleportGuard
 version: 1.1.2
 main: J0k3rrWild\TeleportGuard\Main
 website: https://github.com/J0k3rrWild
-api: 3.26.3
-
-commands:
-  tp:
-    permission: teleportguard.command.tp
-    description: Teleportuje natychmiast do celu
-    usage: /tp <player> | /tp <player> <target> | /tp <x> <y> <z> | /tp <player> <x> <y> <z>
-    aliases: [teleport]
-  teleport:
-    permission: teleportguard.command.tp
-    description: Teleportuje natychmiast do celu
-    usage: /teleport <player> | /teleport <player> <target> | /teleport <x> <y> <z> | /teleport <player> <x> <y> <z>
-  tpa:
-    permission: teleportguard.command.tp
-    description: Wysyła zapytanie o teleport do gracza
-    usage: /tpa <player> | /tpa here <player> | /tpa accept <player> | /tpa deny <player> 
-  warp:
-    permission: teleportguard.command.warp
-    description: Komenda główna warp
-    usage: /warp <name> | /warp set <name> | /warp remove <name> | /warp list
-  home:
-    permission: teleportguard.command.home
-    description: Komenda główna home
-    usage: /home <name> | /home remove <name>| /home set <name> | /home list <name>
+api: 4.0.0
 permissions:
  teleportguard.tp:
   default: op
-  description: Teleportuje natychmiast do celu
+  description: Teleport to player immediately
  teleportguard.warp.set:
   default: op
-  description: Teleportuje natychmiast do celu
+  description: Set a warp
  teleportguard.warp.list:
   default: op
-  description: Teleportuje natychmiast do celu
+  description: Allow list warps
  teleportguard.admin:
   default: op
-  description: Teleportuje natychmiast do celu
+  description: Gives all plugin permissions
 
 
 ...
