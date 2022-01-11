@@ -42,7 +42,7 @@ Advanced and safe teleport administrator which will help you make the server saf
 #### TPA:
 
 ```/tpa <player>``` - Send ask for teleport to other player <br>
-```/tpa here <player>``` - Send <br>
+```/tpa here <player>``` - Send ask for teleport to other player to your location <br>
 ```/tpa accept/deny <player>``` - Accept or deny player teleport request<br>
 
 ***YOU HAVE 20 SECOUND TO ACCEPT OR IT WILL BE AUTOMATICALLY REJECTED***
